@@ -195,7 +195,7 @@ export function HistoryView() {
                         onClick={async () => {
                           try {
                             const res = await fetch(
-                              `https://antenna-described-brief-hart.trycloudflare.com/get_report/?scan_number=${patient.scan_number}`,
+                              `https://thru-screenshot-emily-pin.trycloudflare.com/get_report/?scan_number=${patient.scan_number}`,
                               {
                                 method: "GET",
                                 headers: {

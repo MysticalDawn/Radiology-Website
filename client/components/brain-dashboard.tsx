@@ -161,7 +161,7 @@ export function BrainDashboard() {
 
                     // Send the file to the server using a POST request
                     fetch(
-                      "https://antenna-described-brief-hart.trycloudflare.com/basil",
+                      "https://thru-screenshot-emily-pin.trycloudflare.com/basil",
                       {
                         method: "POST",
                         body: formData,
