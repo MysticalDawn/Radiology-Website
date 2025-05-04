@@ -160,13 +160,16 @@ export function BrainDashboard() {
                     formData.append("file", file);
 
                     // Send the file to the server using a POST request
-                    fetch("http://172.20.10.2:65469/basil", {
-                      method: "POST",
-                      body: formData,
-                      headers: {
-                        CORS: "Access-Control-Allow-Origin",
-                      },
-                    })
+                    fetch(
+                      "https://liability-obvious-customers-introduced.trycloudflare.com/basil",
+                      {
+                        method: "POST",
+                        body: formData,
+                        headers: {
+                          CORS: "Access-Control-Allow-Origin",
+                        },
+                      }
+                    )
                       .then((response) => {
                         if (!response.ok) {
                           console.error(
