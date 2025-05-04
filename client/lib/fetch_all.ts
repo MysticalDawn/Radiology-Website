@@ -1,7 +1,7 @@
 export async function getAllPatients() {
   try {
     const response = await fetch(
-      `https://radiologist-server-ofpssqzzz-mysticaldawns-projects.vercel.app/fetch_all`,
+      `https://radiologist-server-5atpoanam-mysticaldawns-projects.vercel.app/fetch_all`,
       {
         method: "GET",
       }
