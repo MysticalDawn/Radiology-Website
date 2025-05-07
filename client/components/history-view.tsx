@@ -298,7 +298,7 @@ export function HistoryView() {
                         onClick={async () => {
                           try {
                             const res = await fetch(
-                              `http://localhost:3001/get_report/${patient.scan_number}`,
+                              `https://radiologist-server-mqduxnviu-mysticaldawns-projects.vercel.app/get_report/${patient.scan_number}`,
                               {
                                 method: "GET",
                               }
