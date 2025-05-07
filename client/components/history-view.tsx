@@ -195,33 +195,21 @@ export function HistoryView() {
                         onClick={async () => {
                           try {
                             const res = await fetch(
-                              `https://exciting-thai-vcr-hearts.trycloudflare.com/get_report/?scan_number=${patient.scan_number}`,
+                              `http://localhost:3001/get_report/${patient.scan_number}`,
                               {
                                 method: "GET",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                },
                               }
                             );
 
                             if (!res.ok) throw new Error(await res.text());
 
-                            const { pdf_b64 } = await res.json(); // Extract base64
-                            const binary = atob(pdf_b64); // Decode base64 to binary
-                            const array = new Uint8Array(binary.length);
-
-                            for (let i = 0; i < binary.length; i++) {
-                              array[i] = binary.charCodeAt(i);
-                            }
-
-                            const blob = new Blob([array], {
-                              type: "application/pdf",
-                            }); // Create PDF Blob
+                            // Get the blob directly from the response
+                            const blob = await res.blob();
                             const url = URL.createObjectURL(blob);
                             const link = document.createElement("a");
                             link.href = url;
                             link.download = `${patient.scan_number}_report.pdf`;
-                            link.click(); // Trigger download
+                            link.click();
                           } catch (err) {
                             console.error("Download error:", err);
                           }
