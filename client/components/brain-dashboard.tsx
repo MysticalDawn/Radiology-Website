@@ -100,7 +100,7 @@ export function BrainDashboard() {
   const loadExample = async (exampleNumber: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`https://radiologist-server-5atpoanam-mysticaldawns-projects.vercel.app/get_example/${exampleNumber}`);
+      const response = await fetch(`https://radiologist-server-mqduxnviu-mysticaldawns-projects.vercel.app/get_example/${exampleNumber}`);
       if (!response.ok) {
         throw new Error('Failed to load example');
       }
@@ -195,7 +195,7 @@ export function BrainDashboard() {
 
                         // Send the file to the server using a POST request
                         fetch(
-                          "https://radiologist-server-5atpoanam-mysticaldawns-projects.vercel.app/basil",
+                          "https://radiologist-server-mqduxnviu-mysticaldawns-projects.vercel.app/basil",
                           {
                             method: "POST",
                             body: formData,
