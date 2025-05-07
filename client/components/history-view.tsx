@@ -14,6 +14,7 @@ import {
   User,
   AlertCircle,
   CheckCircle,
+  ArrowUpDown,
 } from "lucide-react";
 import {
   TooltipProvider,
@@ -50,6 +51,36 @@ export function HistoryView() {
   const [searchQuery, setSearchQuery] = useState<string>(""); // State for search query
   const [loading, setLoading] = useState<boolean>(true); // State to track loading status
   const [error, setError] = useState<string | null>(null); // State to track errors
+  const [sortConfig, setSortConfig] = useState<{
+    key: string;
+    direction: 'ascending' | 'descending';
+  } | null>(null);
+
+  // Sort function
+  const sortData = (key: string) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+
+    const sortedData = [...data].sort((a, b) => {
+      if (a[key] === null || a[key] === undefined) return 1;
+      if (b[key] === null || b[key] === undefined) return -1;
+
+      if (typeof a[key] === 'string') {
+        return direction === 'ascending' 
+          ? a[key].localeCompare(b[key])
+          : b[key].localeCompare(a[key]);
+      }
+      
+      return direction === 'ascending' 
+        ? a[key] - b[key]
+        : b[key] - a[key];
+    });
+
+    setData(sortedData);
+  };
 
   // Filter by search query (ID or name)
   const filteredData = data.filter((patient) => {
@@ -112,14 +143,86 @@ export function HistoryView() {
             <Table>
               <TableHeader>
                 <TableRow className="border-slate-800 hover:bg-slate-900/50">
-                  <TableHead className="w-[100px]">ID</TableHead>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Age</TableHead>
-                  <TableHead>Gender</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Alert</TableHead>
-                  <TableHead>Urgency</TableHead>
-                  <TableHead>AI Prediction</TableHead>
+                  <TableHead className="w-[100px]">
+                    <Button
+                      variant="ghost"
+                      onClick={() => sortData('id')}
+                      className="flex items-center gap-1"
+                    >
+                      ID
+                      <ArrowUpDown className="h-4 w-4" />
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      onClick={() => sortData('name')}
+                      className="flex items-center gap-1"
+                    >
+                      Name
+                      <ArrowUpDown className="h-4 w-4" />
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      onClick={() => sortData('age')}
+                      className="flex items-center gap-1"
+                    >
+                      Age
+                      <ArrowUpDown className="h-4 w-4" />
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      onClick={() => sortData('gender')}
+                      className="flex items-center gap-1"
+                    >
+                      Gender
+                      <ArrowUpDown className="h-4 w-4" />
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      onClick={() => sortData('date')}
+                      className="flex items-center gap-1"
+                    >
+                      Date
+                      <ArrowUpDown className="h-4 w-4" />
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      onClick={() => sortData('alert')}
+                      className="flex items-center gap-1"
+                    >
+                      Alert
+                      <ArrowUpDown className="h-4 w-4" />
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      onClick={() => sortData('urgency')}
+                      className="flex items-center gap-1"
+                    >
+                      Urgency
+                      <ArrowUpDown className="h-4 w-4" />
+                    </Button>
+                  </TableHead>
+                  <TableHead>
+                    <Button
+                      variant="ghost"
+                      onClick={() => sortData('ai_pred')}
+                      className="flex items-center gap-1"
+                    >
+                      AI Prediction
+                      <ArrowUpDown className="h-4 w-4" />
+                    </Button>
+                  </TableHead>
                   <TableHead className="text-right">Download Report</TableHead>
                 </TableRow>
               </TableHeader>
@@ -195,33 +298,21 @@ export function HistoryView() {
                         onClick={async () => {
                           try {
                             const res = await fetch(
-                              `https://exciting-thai-vcr-hearts.trycloudflare.com/get_report/?scan_number=${patient.scan_number}`,
+                              `http://localhost:3001/get_report/${patient.scan_number}`,
                               {
                                 method: "GET",
-                                headers: {
-                                  "Content-Type": "application/json",
-                                },
                               }
                             );
 
                             if (!res.ok) throw new Error(await res.text());
 
-                            const { pdf_b64 } = await res.json(); // Extract base64
-                            const binary = atob(pdf_b64); // Decode base64 to binary
-                            const array = new Uint8Array(binary.length);
-
-                            for (let i = 0; i < binary.length; i++) {
-                              array[i] = binary.charCodeAt(i);
-                            }
-
-                            const blob = new Blob([array], {
-                              type: "application/pdf",
-                            }); // Create PDF Blob
+                            // Get the blob directly from the response
+                            const blob = await res.blob();
                             const url = URL.createObjectURL(blob);
                             const link = document.createElement("a");
                             link.href = url;
                             link.download = `${patient.scan_number}_report.pdf`;
-                            link.click(); // Trigger download
+                            link.click();
                           } catch (err) {
                             console.error("Download error:", err);
                           }
