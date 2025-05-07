@@ -195,7 +195,7 @@ export function BrainDashboard() {
 
                         // Send the file to the server using a POST request
                         fetch(
-                          "https://radiologist-server-mqduxnviu-mysticaldawns-projects.vercel.app/basil",
+                          "https://navigator-homeless-ctrl-tar.trycloudflare.com/basil",
                           {
                             method: "POST",
                             body: formData,
